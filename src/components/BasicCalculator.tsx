@@ -234,16 +234,15 @@ const Calculator: React.FC = () => {
 
   // --- Render ---
   return (
-    <div className="calculator-container bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600 p-4 sm:p-6 rounded-lg shadow-xl max-w-xs sm:max-w-sm mx-auto my-6">
+    <div className="calculator-container">
       {/* Display Screen with displayValue state */}
-      <div className="display bg-gray-800 bg-opacity-90 text-white text-right p-4 rounded-md mb-4 shadow-inner min-h-[4.5rem] flex items-end justify-end">
+      <div className="display">
         <div
-          className="output text-3xl sm:text-4xl font-mono break-all"
+          className="output"
           role="textbox"
           aria-readonly="true"
           aria-live="polite"
           aria-label="calculator screen display"
-          style={{ wordBreak: "break-all" }} // Ensure long numbers break
         >
           {displayValue === "Error" ? (
             <span className="text-red-400">{displayValue}</span> // Style error message
@@ -260,29 +259,29 @@ const Calculator: React.FC = () => {
       </div>
 
       {/* Calculator Buttons Grid with onClick handlers */}
-      <div className="buttons grid grid-cols-4 gap-2">
+      <div className="buttons">
         {/* Row 1: AC, +/-, %, ÷ */}
         <button
           onClick={clearAll}
-          className="btn bg-rose-300 hover:bg-rose-400 text-black font-semibold py-3 rounded-md shadow focus:ring-2 focus:ring-rose-500" aria-label="All Clear"
+          className="btn clear" aria-label="All Clear"
         >
           AC
         </button>
         <button
           onClick={handleToggleSign}
-          className="btn bg-gray-300 hover:bg-gray-400 text-black font-semibold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-500" aria-label="Toggle Sign"
+          className="btn utility" aria-label="Toggle Sign"
         >
           +/-
         </button>
         <button
           onClick={handlePercent}
-          className="btn bg-gray-300 hover:bg-gray-400 text-black font-semibold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-500" aria-label="Percent"
+          className="btn utility" aria-label="Percent"
         >
           %
         </button>
         <button
           onClick={() => handleOperator("÷")}
-          className="btn operator bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-amber-700" aria-label="Divide"
+          className="btn operator" aria-label="Divide"
         >
           ÷
         </button>
@@ -290,25 +289,25 @@ const Calculator: React.FC = () => {
         {/* Row 2: 7, 8, 9, * */}
         <button
           onClick={() => inputDigit("7")}
-          className="btn number bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-400" aria-label="Seven"
+          className="btn number" aria-label="Seven"
         >
           7
         </button>
         <button
           onClick={() => inputDigit("8")}
-          className="btn number bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-400" aria-label="Eight"
+          className="btn number" aria-label="Eight"
         >
           8
         </button>
         <button
           onClick={() => inputDigit("9")}
-          className="btn number bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-400" aria-label="Nine"
+          className="btn number" aria-label="Nine"
         >
           9
         </button>
         <button
           onClick={() => handleOperator("×")}
-          className="btn operator bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-amber-700" aria-label="Multiply"
+          className="btn operator" aria-label="Multiply"
         >
           ×
         </button>
@@ -316,25 +315,25 @@ const Calculator: React.FC = () => {
         {/* Row 3: 4, 5, 6, - */}
         <button
           onClick={() => inputDigit("4")}
-          className="btn number bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-400" aria-label="Four"
+          className="btn number" aria-label="Four"
         >
           4
         </button>
         <button
           onClick={() => inputDigit("5")}
-          className="btn number bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-400" aria-label="Five"
+          className="btn number" aria-label="Five"
         >
           5
         </button>
         <button
           onClick={() => inputDigit("6")}
-          className="btn number bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-400" aria-label="Six"
+          className="btn number" aria-label="Six"
         >
           6
         </button>
         <button
           onClick={() => handleOperator("-")}
-          className="btn operator bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-amber-700" aria-label="Subtract"
+          className="btn operator" aria-label="Subtract"
         >
           -
         </button>
@@ -342,25 +341,25 @@ const Calculator: React.FC = () => {
         {/* Row 4: 1, 2, 3, + */}
         <button
           onClick={() => inputDigit("1")}
-          className="btn number bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-400" aria-label="One"
+          className="btn number" aria-label="One"
         >
           1
         </button>
         <button
           onClick={() => inputDigit("2")}
-          className="btn number bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-400" aria-label="Two"
+          className="btn number" aria-label="Two"
         >
           2
         </button>
         <button
           onClick={() => inputDigit("3")}
-          className="btn number bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-400" aria-label="Three"
+          className="btn number" aria-label="Three"
         >
           3
         </button>
         <button
           onClick={() => handleOperator("+")}
-          className="btn operator bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-amber-700" aria-label="Add"
+          className="btn operator" aria-label="Add"
         >
           +
         </button>
@@ -368,19 +367,19 @@ const Calculator: React.FC = () => {
         {/* Row 5: 0, ., = */}
         <button
           onClick={() => inputDigit("0")}
-          className="btn number col-span-2 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-400" aria-label="Zero"
+          className="btn number col-span-2" aria-label="Zero"
         >
           0
         </button>
         <button
           onClick={inputDecimal}
-          className="btn number bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-400" aria-label="Decimal Point"
+          className="btn utility" aria-label="Decimal Point"
         >
           .
         </button>
         <button
           onClick={handleEquals}
-          className="btn equals bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-emerald-700" aria-label="Equals"
+          className="btn equals" aria-label="Equals"
         >
           =
         </button>
