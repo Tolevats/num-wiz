@@ -1,5 +1,7 @@
 /* App specific styles */
 .App {
-  text-align: center;
-  padding-top: 2rem; /* Add some space at the top */
+  display: flex; /* Already set in App.tsx */
+  flex-direction: column; /* Already set in App.tsx */
+  align-items: center; /* Already set in App.tsx */
+  min-height: 100vh;
 }
