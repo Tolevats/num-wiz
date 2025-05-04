@@ -1,0 +1,45 @@
+/* Styles specific to the Calculator */
+
+/* if Tailwind classes aren't enough */
+/* Like custom animations or very specific layouts */
+
+.btn {
+    /* Basic button styling - Tailwind handles most of this now */
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+    font-size: 1.1rem; /* Slightly larger font for buttons */
+    /* Ensure high contrast and readability */
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Subtle border */
+  }
+  
+  /* Add active state for better feedback */
+  .btn:active {
+      transform: scale(0.95); /* Slight shrink effect on click */
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Style operator buttons distinctly */ /* Tailwind handles colors, but I could add more specific styles */
+  /* .btn.operator {} */
+  
+  /* Style equals button distinctly */ /* Tailwind handles colors, but I could add more specific styles */
+  /* .btn.equals {} */
+  
+  /* Style number buttons */ /* Tailwind handles colors, but I could add more specific styles */
+  /* .btn.number {} */
+  
+  /* Style the display */
+  .display {
+    /* Ensure text doesn't overflow awkwardly */
+    overflow-wrap: break-word;
+    word-wrap: break-word; /* Older browsers */
+    min-height: 3.5rem; /* Ensure display has a minimum height */
+    display: flex;
+    align-items: center; /* Vertically center text */
+    justify-content: flex-end; /* Align text to the right */
+  }
+  
+  /* Add focus styles for accessibility! */
+  .btn:focus {
+      outline: 2px solid #3b82f6; /* blue outline */
+      outline-offset: 2px;
+  }
+  
