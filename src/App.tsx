@@ -2,6 +2,9 @@ import React, { useState, useCallback } from "react";
 import Calculator from "./components/BasicCalculator";
 import PowerUpDashboard from "./components/PowerUpDashboard";
 import DidYouKnow from "./components/DidYouKnow";
+import Header from "./components/Header";
+import CTA from "./components/CTA";
+import Footer from "./components/Footer";
 import "./App.css";
 
 // --- Data Definitions for Badges and Facts ---
@@ -225,10 +228,8 @@ function App() {
   return (
     // Main container with flex column layout, centering items
     <div className="App container mx-auto p-4 flex flex-col items-center min-h-screen">
-      {/* Create and add Header Section */}
-      <h1 className="text-4xl font-bold text-purple-700 mb-6">Num Wiz!</h1>
-
-      {/* Power-Up Dashboard */}
+      <Header />
+      <CTA />
       <PowerUpDashboard
         badges={ALL_BADGES.filter((b) =>
           ["pi", "seven", "zero", "angle", "dozen"].includes(b.id)
@@ -237,17 +238,15 @@ function App() {
         totalBasicBadges={5}
         justUnlockedBadgeId={justUnlockedBadge} // Pass down the ID of the recently unlocked badge
       />
-
-      {/* Main Calculator Component */}
+      <h2 className="text-2xl font-bold mx-6">Keep the Calculations Coming!</h2>
       <Calculator onCalculationComplete={handleCalculationComplete} />
-
-      {/* "Did You Know?" Section */}
       <DidYouKnow
         fact={currentFact}
         onDismiss={() => setCurrentFact(null)} // Allow dismissing the fact
       />
 
-      {/* Create and add Footer component later */}
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
