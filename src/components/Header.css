@@ -1,0 +1,65 @@
+.app-header {
+    background: #111827;
+    padding: 1rem 2rem;
+    width: 100%;
+    border-bottom: 1px solid #374151;
+  }
+  
+  .header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .brand-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .logo {
+    width: 40px;
+    height: 40px;
+    background: #3b82f6;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: logo-pulse 2s infinite;
+  }
+  
+  .logo-symbol {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .app-title {
+    color: white;
+    font-size: 1.75rem;
+    margin: 0;
+  }
+  
+  .app-subtitle {
+    color: #9ca3af;
+    font-size: 1rem;
+    margin-top: 10px;
+  }
+
+  .shimmer-text {
+    background: linear-gradient(90deg, #f8ef72 0%, #e4e109 50%, #c4f3f5 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 3s linear infinite;
+  }
+  
+  @keyframes logo-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
