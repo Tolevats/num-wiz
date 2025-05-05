@@ -18,9 +18,7 @@ const performCalculation = (
     case "×":
       return first * second;
     case "÷": {
-      if (second === 0) {
-        return "Error"; // Handle division by zero
-      }
+      if (second === 0) return "Error"; // Handle division by zero
       // Handle potential floating point inaccuracies for simple cases
       const result = first / second;
       // Basic check for long decimals - could be more robust
@@ -32,14 +30,23 @@ const performCalculation = (
       }
       return result;
     }
-
     default:
-      // Should not happen with TypeScript, but good practice
       return second;
   }
 };
 
-const Calculator: React.FC = () => {
+// --- Prop Types for Calculator ---
+interface CalculatorProps {
+  // Function called when '=' is pressed and calculation is done
+  onCalculationComplete: (
+    result: number | string,
+    firstOperand?: number | null,
+    operator?: string | null, // Pass operator as string
+    secondOperand?: number | null
+  ) => void;
+}
+
+const Calculator: React.FC<CalculatorProps> = ({ onCalculationComplete }) => {
   // --- State Variables ---
   const [displayValue, setDisplayValue] = useState<string>("0"); // displayValue: The string currently shown on the calculator screen
   const [firstOperand, setFirstOperand] = useState<number | null>(null); // firstOperand: Stores the first number entered before an operator is pressed. Null if not set yet
@@ -67,18 +74,9 @@ const Calculator: React.FC = () => {
       setWaitingForSecondOperand(false);
     } else {
       // Prevent excessively long numbers (limit to 15 digits)
-      if (displayValue.replace(".", "").length >= 15) {
-        console.log("Max digits reached");
-        return;
-      }
+      if (displayValue.replace(".", "").length >= 15) return;
       setDisplayValue(displayValue === "0" ? digit : displayValue + digit); // Replace '0' if it's the only thing displayed, otherwise append
     }
-    // Basic console log for debugging
-    console.log(
-      `Digit ${digit} pressed. Display: ${
-        displayValue === "0" ? digit : displayValue + digit
-      }`
-    );
   };
 
   const inputDecimal = () => {
@@ -94,21 +92,12 @@ const Calculator: React.FC = () => {
       // If waiting for the second operand, start with "0."
       setDisplayValue("0.");
       setWaitingForSecondOperand(false);
-      console.log(`Decimal pressed (starting new number). Display: 0.`);
       return;
     }
     if (!displayValue.includes(".")) {
       // Prevent excessively long numbers
-      if (displayValue.length >= 15) {
-        console.log("Max digits reached");
-        return;
-      }
-      setDisplayValue(displayValue + ".");
-      console.log(`Decimal pressed. Display: ${displayValue + "."}`);
-    } else {
-      console.log(
-        `Decimal pressed (ignored, already exists). Display: ${displayValue}`
-      );
+      if (displayValue.length >= 15) return;
+        setDisplayValue(displayValue + ".");
     }
   };
 
@@ -118,18 +107,12 @@ const Calculator: React.FC = () => {
     setOperator(null);
     setWaitingForSecondOperand(false);
     setPrevCalculation(null); // Clear previous calculation state
-    console.log("AC pressed. Calculator reset.");
   };
 
   // --- Handles operator button presses ---
   const handleOperator = (nextOperator: Operator) => {
     if (displayValue === "Error") return; // Don't allow operations after error
-
-    console.log(
-      `Operator ${nextOperator} pressed. Current display: ${displayValue}`
-    );
     const inputValue = parseFloat(displayValue);
-
     setPrevCalculation(null); // Reset previous calculation state on new operator input
 
     if (operator && !waitingForSecondOperand && firstOperand !== null) {
@@ -140,9 +123,6 @@ const Calculator: React.FC = () => {
       // Check if result is a valid number before storing
       const numericResult = parseFloat(resultString);
       setFirstOperand(isNaN(numericResult) ? null : numericResult);
-      console.log(
-        `Intermediate calculation: ${firstOperand} ${operator} ${inputValue} = ${resultString}`
-      );
       // Handle error propagation
       if (result === "Error") {
         setOperator(null);
@@ -151,60 +131,50 @@ const Calculator: React.FC = () => {
       }
     } else if (firstOperand === null) {
       setFirstOperand(inputValue); // If it's the first operator press, store the current display value as the first operand
-    } else {
-      // If waiting for second operand, just update the operator
-      console.log(`Operator changed from ${operator} to ${nextOperator}`);
     }
-
     // Set the new operator and flag that we're waiting for the second operand
     setOperator(nextOperator);
     setWaitingForSecondOperand(true);
   };
 
+  // --- Updated handleEquals to call the prop ---
   const handleEquals = () => {
-    console.log(
-      `Equals pressed. State: firstOperand=${firstOperand}, operator=${operator}, displayValue=${displayValue}, waiting=${waitingForSecondOperand}`
-    );
-    if (displayValue === "Error") return; // Don't allow equals after error
+    if (displayValue === 'Error') return;
 
     let result: number | string;
-    let currentSecondOperand: number;
+    let op1: number | null = null;
+    let op2: number | null = null;
+    let currentOp: Operator | null = null;
 
     // Case 1: Standard calculation
     if (firstOperand !== null && operator && !waitingForSecondOperand) {
-      currentSecondOperand = parseFloat(displayValue);
-      result = performCalculation(firstOperand, currentSecondOperand, operator);
-      console.log(
-        `Calculation: ${firstOperand} ${operator} ${currentSecondOperand} = ${result}`
-      );
-      // Store details for potential consecutive equals presses
-      setPrevCalculation({ operand: currentSecondOperand, operator: operator });
-      setFirstOperand(null); // Clear first operand after calculation
-      setOperator(null); // Clear operator
-      // waitingForSecondOperand remains false
+      op1 = firstOperand;
+      op2 = parseFloat(displayValue);
+      currentOp = operator;
+      result = performCalculation(op1, op2, currentOp);
+      setPrevCalculation({ operand: op2, operator: currentOp });
+      setFirstOperand(null);
+      setOperator(null);
     }
     // Case 2: Consecutive equals presses
     else if (prevCalculation && firstOperand === null) {
-      // Check firstOperand is null to ensure it's after an initial equals
-      const currentDisplayValue = parseFloat(displayValue); // The result of the last calculation
-      result = performCalculation(
-        currentDisplayValue,
-        prevCalculation.operand,
-        prevCalculation.operator
-      );
-      console.log(
-        `Consecutive equals: ${currentDisplayValue} ${prevCalculation.operator} ${prevCalculation.operand} = ${result}`
-      );
+      op1 = parseFloat(displayValue); // The previous result
+      op2 = prevCalculation.operand;
+      currentOp = prevCalculation.operator;
+      result = performCalculation(op1, op2, currentOp);
+      // Keep prevCalculation for next equals press
     }
     // Case 3: Pressing equals without enough info
     else {
       console.log("Equals pressed, but not enough information to calculate.");
-      return; // Do nothing
+      return; // Don't call callback if nothing happened
     }
 
     const resultString = String(result);
     setDisplayValue(resultString);
-    // Don't set waitingForSecondOperand here, allow new number input or operator after equals
+
+    // *** Call the callback function passed from App ***
+    onCalculationComplete(result, op1, currentOp, op2);
   };
 
   const handleToggleSign = () => {
@@ -218,13 +188,12 @@ const Calculator: React.FC = () => {
     if (displayValue === "Error") return; // Don't calculate percent on error message
     console.log(`% pressed. Current display: ${displayValue}`);
     const currentValue = parseFloat(displayValue);
-    // More standard calculator behavior: calculate percentage based on first operand if available
+    // Calculate percentage based on first operand if available
     let resultValue;
     if (firstOperand !== null && operator) {
       // Calculate percentage of the first operand
       resultValue = firstOperand * (currentValue / 100);
     } else {
-      // Otherwise, just divide by 100 (less common, but simple)
       resultValue = currentValue / 100;
     }
     setDisplayValue(String(resultValue));
@@ -261,27 +230,27 @@ const Calculator: React.FC = () => {
       {/* Calculator Buttons Grid with onClick handlers */}
       <div className="buttons">
         {/* Row 1: AC, +/-, %, ÷ */}
-        <button
-          onClick={clearAll}
-          className="btn clear" aria-label="All Clear"
-        >
+        <button onClick={clearAll} className="btn clear" aria-label="All Clear">
           AC
         </button>
         <button
           onClick={handleToggleSign}
-          className="btn utility" aria-label="Toggle Sign"
+          className="btn utility"
+          aria-label="Toggle Sign"
         >
           +/-
         </button>
         <button
           onClick={handlePercent}
-          className="btn utility" aria-label="Percent"
+          className="btn utility"
+          aria-label="Percent"
         >
           %
         </button>
         <button
           onClick={() => handleOperator("÷")}
-          className="btn operator" aria-label="Divide"
+          className="btn operator"
+          aria-label="Divide"
         >
           ÷
         </button>
@@ -289,25 +258,29 @@ const Calculator: React.FC = () => {
         {/* Row 2: 7, 8, 9, * */}
         <button
           onClick={() => inputDigit("7")}
-          className="btn number" aria-label="Seven"
+          className="btn number"
+          aria-label="Seven"
         >
           7
         </button>
         <button
           onClick={() => inputDigit("8")}
-          className="btn number" aria-label="Eight"
+          className="btn number"
+          aria-label="Eight"
         >
           8
         </button>
         <button
           onClick={() => inputDigit("9")}
-          className="btn number" aria-label="Nine"
+          className="btn number"
+          aria-label="Nine"
         >
           9
         </button>
         <button
           onClick={() => handleOperator("×")}
-          className="btn operator" aria-label="Multiply"
+          className="btn operator"
+          aria-label="Multiply"
         >
           ×
         </button>
@@ -315,25 +288,29 @@ const Calculator: React.FC = () => {
         {/* Row 3: 4, 5, 6, - */}
         <button
           onClick={() => inputDigit("4")}
-          className="btn number" aria-label="Four"
+          className="btn number"
+          aria-label="Four"
         >
           4
         </button>
         <button
           onClick={() => inputDigit("5")}
-          className="btn number" aria-label="Five"
+          className="btn number"
+          aria-label="Five"
         >
           5
         </button>
         <button
           onClick={() => inputDigit("6")}
-          className="btn number" aria-label="Six"
+          className="btn number"
+          aria-label="Six"
         >
           6
         </button>
         <button
           onClick={() => handleOperator("-")}
-          className="btn operator" aria-label="Subtract"
+          className="btn operator"
+          aria-label="Subtract"
         >
           -
         </button>
@@ -341,25 +318,29 @@ const Calculator: React.FC = () => {
         {/* Row 4: 1, 2, 3, + */}
         <button
           onClick={() => inputDigit("1")}
-          className="btn number" aria-label="One"
+          className="btn number"
+          aria-label="One"
         >
           1
         </button>
         <button
           onClick={() => inputDigit("2")}
-          className="btn number" aria-label="Two"
+          className="btn number"
+          aria-label="Two"
         >
           2
         </button>
         <button
           onClick={() => inputDigit("3")}
-          className="btn number" aria-label="Three"
+          className="btn number"
+          aria-label="Three"
         >
           3
         </button>
         <button
           onClick={() => handleOperator("+")}
-          className="btn operator" aria-label="Add"
+          className="btn operator"
+          aria-label="Add"
         >
           +
         </button>
@@ -367,19 +348,22 @@ const Calculator: React.FC = () => {
         {/* Row 5: 0, ., = */}
         <button
           onClick={() => inputDigit("0")}
-          className="btn number col-span-2" aria-label="Zero"
+          className="btn number col-span-2"
+          aria-label="Zero"
         >
           0
         </button>
         <button
           onClick={inputDecimal}
-          className="btn utility" aria-label="Decimal Point"
+          className="btn utility"
+          aria-label="Decimal Point"
         >
           .
         </button>
         <button
           onClick={handleEquals}
-          className="btn equals" aria-label="Equals"
+          className="btn equals"
+          aria-label="Equals"
         >
           =
         </button>
