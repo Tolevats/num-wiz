@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 
 // Define operator types
-export type Operator = "+" | "-" | "*" | "÷";
+export type Operator = "+" | "-" | "×" | "÷";
 export type ScientificOperator =
   | "sin"
   | "cos"
@@ -29,7 +29,7 @@ const performCalculation = (
       return first + second;
     case "-":
       return first - second;
-    case "*":
+    case "×":
       return first * second;
     case "÷": {
       if (second === 0) return "Error";
@@ -88,13 +88,13 @@ const performScientificCalculation = (
 };
 
 // --- Prop Types for the Hook ---
-interface UseCalculatorLogicProps {
+export interface UseCalculatorLogicProps {
   onCalculationComplete: (
     result: number | string,
     firstOperand?: number | null,
     operator?: CalculationOperator | null,
     secondOperand?: number | null,
-    operationType?: OperationType
+    operationType?: OperationType | null
   ) => void;
 }
 
