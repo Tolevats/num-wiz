@@ -1,7 +1,13 @@
 /* App specific styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 .App {
-  display: flex; /* Already set in App.tsx */
-  flex-direction: column; /* Already set in App.tsx */
-  align-items: center; /* Already set in App.tsx */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   min-height: 100vh;
 }
