@@ -1,10 +1,10 @@
 import React from "react";
-import { useCalculatorLogic } from "../hooks/useCalculatorLogic";
+import { useCalculatorLogic, UseCalculatorLogicProps } from "../hooks/useCalculatorLogic";
 import "./BasicCalculator.css";
 
 // Props expected by BasicCalculator (just the callback)
 interface BasicCalculatorProps {
-  onCalculationComplete: ReturnType<typeof useCalculatorLogic>['handleEquals']; // Get type from hook
+  onCalculationComplete: UseCalculatorLogicProps['onCalculationComplete']; // Get type from hook
 }
 
 const BasicCalculator: React.FC<BasicCalculatorProps> = ({ onCalculationComplete }) => {
