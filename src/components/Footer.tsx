@@ -1,5 +1,6 @@
 import React from "react";
 import "./Footer.css";
+import { FaTiktok, FaTwitch, FaDiscord } from "react-icons/fa6";
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -14,29 +15,45 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="footer-section community-section">
-          <h4 aria-label="Join our online community">Join the League of Num Wiz Kids!</h4>
+          <h4 className="text-xs md:text-base lg:text-lg" aria-label="Join our online community">Join the League of Num Wiz Kids!</h4>
           <div className="footer-column">
-            <h4 className="community-link pulse-animation" >TikTok</h4>
-            <p>
-            {/* Add icon + anchor */}
-            </p>
+            <a
+            href="https://www.tiktok.com/"
+            target="_blank"
+            rel="noreferrer noopener"
+            aria-label="TikTok"
+            className="text-gray-500 hover:text-primary dark:hover:text-primary-light transition-colors community-link pulse-animation"
+          >
+            <FaTiktok className="h-6 w-6 md:h-12 md:w-12 lg:h-18 lg:w-18"/>
+          </a>
           </div>
           <div className="footer-column">
-            <h4 className="community-link pulse-animation" >Twitch</h4>
-            <p>
-            {/* Add icon + anchor */}
-            </p>
+            <a
+            href="https://www.twitch.tv/"
+            target="_blank"
+            rel="noreferrer noopener"
+            aria-label="Twitch"
+            className="text-gray-500 hover:text-primary dark:hover:text-primary-light transition-colors community-link pulse-animation"
+          >
+            <FaTwitch className="h-6 w-6 md:h-12 md:w-12 lg:h-18 lg:w-18"/>
+          </a>
           </div>
           <div className="footer-column">
-            <h4 className="community-link pulse-animation" >Discord</h4>
-            <p>
-            {/* Add icon + anchor */}
-            </p>
+            <a
+            href="https://discord.com/"
+            target="_blank"
+            rel="noreferrer noopener"
+            aria-label="Discord"
+            className="text-gray-500 hover:text-primary dark:hover:text-primary-light transition-colors community-link pulse-animation"
+          >
+            <FaDiscord className="h-6 w-6 md:h-12 md:w-12 lg:h-18 lg:w-18"/>
+          </a>
           </div>
         </div>
 
-        <div className="footer-section copyright-section">
-          <p>© {currentYear} Num Wiz - Where Numbers Come to Play!</p>
+        <div className="footer-section">
+          <p className="text-sm copyright-line">{currentYear} Num Wiz © - Where Numbers Come to Play!</p>
+          <p className="text-xs author-line text-gray-500 mt-1">Made with 💚 by @Tolevats</p>
         </div>
       </div>
     </footer>
