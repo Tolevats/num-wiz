@@ -36,13 +36,22 @@ const PowerUpDashboard: React.FC<PowerUpDashboardProps> = ({
   
    return (
     <div className={`power-up-dashboard bg-white bg-opacity-80 backdrop-blur-sm p-4 rounded-lg shadow-md mb-6 w-full max-w-md mx-auto ${className}`}>
-      <h2 className="text-xl font-semibold text-gray-700 mb-3 text-center">{title}</h2>
       {!isUnlocked ? (
           <>
-            <div className="progress-bar bg-gray-200 rounded-full h-4 mb-3 overflow-hidden">
-                <div className="progress bg-gradient-to-r from-green-400 to-blue-500 h-full rounded-full transition-all duration-500 ease-out" style={{ width: `${progressPercent}%` }} role="progressbar" aria-valuenow={progressPercent} aria-valuemin={0} aria-valuemax={100} aria-label={`Progress: ${relevantUnlockedCount} of ${totalBadgesNeeded} badges collected`}></div>
+            <div className="flex justify-between items-center mb-2">
+              <div className="flex items-center text-spans-container">
+                <div className="text-yellow-500 mr-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <span className="text-gray-600">Collect <strong>{totalBadgesNeeded}</strong> Power-Ups: <strong>{relevantUnlockedCount}</strong>/{totalBadgesNeeded}</span>
+                <span className="text-gray-700"><strong>Next: </strong>{title}</span>
+              </div>
             </div>
-            <p className="text-sm text-gray-600 text-center mb-4">Collect {totalBadgesNeeded} power-ups ({relevantUnlockedCount}/{totalBadgesNeeded})</p>
+            <div className="progress-bar bg-gray-300 rounded-full h-4 mb-3 overflow-hidden">
+                  <div className="progress bg-gradient-to-r from-green-400 to-blue-500 h-full rounded-full transition-all duration-500 ease-out" style={{ width: `${progressPercent}%` }} role="progressbar" aria-valuenow={Number(progressPercent)} aria-valuemin={0} aria-valuemax={100} aria-label={`Progress: ${relevantUnlockedCount} of ${totalBadgesNeeded} badges collected`}></div>
+                </div>
           </>
       ) : ( <p className="text-lg font-semibold text-green-600 text-center mb-4 animate-pulse">{unlockMessage}</p> )}
       <div className={`badges-grid grid grid-cols-${badges.length > 5 ? 5 : Math.max(3, badges.length)} gap-3 justify-items-center`}>
@@ -52,7 +61,7 @@ const PowerUpDashboard: React.FC<PowerUpDashboardProps> = ({
           return (
             <div key={badge.id} className={`badge-item text-center p-2 rounded-lg w-16 h-16 flex flex-col items-center justify-center transition-all duration-300 relative group ${ isUnlocked ? 'bg-yellow-300 shadow-lg scale-105' : 'bg-gray-100 opacity-60 shadow-sm' } ${ isJustUnlocked ? 'animate-pulse' : '' }`}>
               <span className="text-2xl mb-1">{isUnlocked ? badge.icon : badge.lockedIcon}</span>
-               <div className="absolute bottom-full mb-2 w-max px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10"> {isUnlocked ? badge.name : badge.description} {!isUnlocked && <span className="font-bold"> (Locked)</span>} </div>
+               <div className="absolute bottom-full mb-2 w-max px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10"> {isUnlocked ? badge.name : badge.description} {!isUnlocked && <span className="locked">(🔒)</span>} </div>
             </div> );
         })}
       </div>
