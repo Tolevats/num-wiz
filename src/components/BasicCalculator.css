@@ -57,7 +57,7 @@
   border: none;
   border-radius: 0.25rem;
   padding: 0.75rem;
-  font-size: 1.1rem;
+  font-size: clamp(1.1rem, 3vw, 1.75rem);
   font-weight: 500;
   transition: all 0.15s ease-in-out;
   cursor: pointer;
@@ -94,6 +94,20 @@
   color: white;
 }
 
+.btn.locked {
+  background-color: var(--neutral-700); /* Similar to utility buttons */
+  color: var(--neutral-900); /* Dark text color */
+  opacity: 0.6; /* Faded appearance */
+  cursor: not-allowed; /* Indicate it's not interactive */
+}
+
+.icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px
+}
+
 /* Hover States */
 .btn.clear:hover { background-color: #b91c1c; }
 .btn.number:hover { background-color: var(--neutral-700); }
@@ -108,26 +122,94 @@
 }
 
 /* Responsive Design */
-@media (min-width: 640px) {
+@media (min-width: 640px) {  /* Small tablets and larger phones */
   .calculator-container {
     padding: 1.5rem;
     border-radius: 0.75rem;
+    max-width: 500px;
   }
   
   .display {
     font-size: 2rem;
     padding: 1rem;
-    min-height: 5.5rem;
+    min-height: 6rem;
   }
   
   .btn {
     font-size: 1.25rem;
     padding: 1rem;
-    min-height: 3.5rem;
+    min-height: 4rem;
   }
   
   .buttons {
     gap: 0.75rem;
+  }
+}
+
+@media (min-width: 768px) { /* Tablets */
+  .calculator-container {
+    max-width: 600px; /* Wider on tablets */
+    padding: 2rem;
+  }
+
+  .display {
+    font-size: 2.5rem;
+    padding: 1.25rem;
+    min-height: 7rem;
+  }
+
+  .btn {
+    font-size: 1.5rem;
+    padding: 1.25rem;
+    min-height: 4.5rem;
+  }
+
+  .buttons {
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 1024px) { /* Desktops */
+  .calculator-container {
+    max-width: 700px; /* Wider on desktops */
+    margin: 2rem auto;
+    border-radius: 1rem;
+  }
+
+  .display {
+    font-size: 3rem;
+    padding: 1.5rem;
+    min-height: 8rem;
+  }
+
+  .btn {
+    font-size: 1.75rem;
+    padding: 1.5rem;
+    min-height: 5rem;
+  }
+
+  .buttons {
+    gap: 1.25rem;
+  }
+}
+
+@media (min-width: 1280px) { /* Larger desktops */
+  .calculator-container {
+    max-width: 800px; /* Even wider on large desktops */
+  }
+
+  .display {
+    font-size: 3.5rem;
+    min-height: 9rem;
+  }
+
+  .btn {
+    font-size: 2rem;
+    min-height: 5.5rem;
+  }
+
+  .buttons {
+    gap: 1.5rem;
   }
 }
 
