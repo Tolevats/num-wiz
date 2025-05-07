@@ -66,9 +66,19 @@ const BasicCalculator: React.FC<BasicCalculatorProps> = ({ onCalculationComplete
         <button onClick={() => inputDigit("3")} className="btn number" aria-label="Three">3</button>
         <button onClick={() => handleOperator("+")} className="btn operator" aria-label="Add">+</button>
 
-        {/* Row 5: 0, ., = */}
-        <button onClick={() => inputDigit("0")} className="btn number col-span-2" aria-label="Zero">0</button>
-        <button onClick={inputDecimal} className="btn utility" aria-label="Decimal Point">.</button>
+        {/* Row 5: Locked, 0, ., = */}
+        <button className="btn locked" aria-label="Scientific Mode Locked">
+        <img 
+          src="/imgs/lock-keyhole-minimalistic-white.svg" 
+          alt=""
+          className="icon"
+          aria-hidden="true"
+          width="24"
+          height="24"
+        />
+        </button>
+        <button onClick={() => inputDigit("0")} className="btn number" aria-label="Zero">0</button>
+        <button onClick={inputDecimal} className="btn number" aria-label="Decimal Point">.</button>
         <button onClick={handleEquals} className="btn equals" aria-label="Equals">=</button>
       </div>
     </div>
