@@ -2,9 +2,17 @@
 
 .did-you-know-container {
     animation: fadeIn 0.5s ease-out;
+    position: fixed;
+    z-index: 1000;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0; 
+        transform: translate(-50%, calc(-50% - 20px)); 
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
 }

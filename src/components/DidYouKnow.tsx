@@ -14,10 +14,8 @@ const DidYouKnow: React.FC<DidYouKnowProps> = ({ fact, onDismiss }) => {
   }
 
   return (
-    // Use a fixed or absolute position overlay, or inline block
-    // This version is an inline block appearing below the calculator
     <div
-      className="did-you-know-container bg-gradient-to-r from-teal-100 to-blue-100 p-4 rounded-lg shadow-md mt-6 w-full max-w-md mx-auto border border-blue-200"
+      className="did-you-know-container top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-teal-100 to-blue-100 p-4 rounded-lg shadow-md w-full max-w-md border border-blue-200"
       role="alert" // Good for accessibility, announces the content
       aria-live="polite" // Announce changes politely
     >
