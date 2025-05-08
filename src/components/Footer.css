@@ -1,110 +1,149 @@
 .app-footer {
-    background: #111827;
-    color: white;
-    width: 100%;
-    padding: 1rem 2rem;
-    border-top: 1px solid #374151;
-  }
-  
-  .footer-section {
-    text-align: center;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  .footer-cta {
-    text-align: center;
-    padding-bottom: 3rem;
-    margin-bottom: 3rem;
-    border-bottom: 1px solid #374151;
-  }
-  
-  .cta-heading {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-  }
+  background: #111827;
+  color: white;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border-top: 1px solid #374151;
+}
 
-  .magic-text {
-    position: relative;
-    display: inline-block;
-  }
-  
-  .magic-text::after {
-    content: "";
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: #ffd700;
-    transform: scaleX(0);
-    transition: transform 0.3s ease;
-  }
-  
-  .magic-hover:hover .magic-text::after {
-    transform: scaleX(1);
-  }
+.footer-section {
+  text-align: center;
+  margin: 0 auto;
+}
 
-  .cta-button {
-    background: #3b82f6;
-    color: white;
-    padding: 0.75rem 2rem;
-    border-radius: 0.5rem;
-    border: none;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-  }
-  
-  .cta-button:hover {
-    transform: translateY(-2px);
-  }
-  
-  .community-section {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
-    margin-bottom: 3rem;
-  }
-  
-  .footer-column a {
-    color: #e5e7eb;
-    text-decoration: none;
-  }
-  
-  .footer-column a:hover {
-    color: #3b82f6;
-  }
-  
-  .community-link {
-    display: inline-block;
-    color: #3b82f6;
-    text-decoration: none;
+.community-section {
+  display: flex; /* Changed to flex to control width of links */
+  justify-content: center;
+  gap: 2rem;
+  padding: 1.5rem;
+  border-bottom: 1px solid #374151;
+}
+.community-cta {
+  display: none;
+}
+.community-link a {
+  color: #e5e7eb;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.75rem;
+  border: 2px solid #3b82f6;
+  border-radius: 50%;
+}
+.community-link a:hover {
+  color: #3b82f6;
+}
+.pulse-animation {
+  animation: pulse 2s infinite;
+}
+
+.contact-section {
+  padding: 1.5rem;
+  border-bottom: 1px solid #374151;
+}
+.contact-cta {
+  text-align: center;
+  font-style: italic;;
+  margin-bottom: 0.5rem;
+}
+.contact-cta span {
+  display: block;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.magic-text { /* Initial state */
+  text-decoration: none; /* No underline */
+  font-size: 1rem; /* Maintain the base font size */
+  transition: text-decoration 0.3s ease, font-size 0.3s ease; /* Smooth transitions */
+}
+.contact-section:hover .magic-text { /* Style on hover of contact-section */
+  text-decoration: underline; /* Add underline on hover */
+  font-size: 2rem;
+  font-weight: bolder;
+  color: #eab308;
+}
+.contact-btn {
+  background: #3b82f6;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 0.rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.contact-btn:hover {
+  background-color: #345293;
+}
+
+.bottom-section {
+  margin: 1rem;
+}
+.copyright-line {
+  text-align: center;
+  color: #9ca3af;
+}
+.author-line {
+  margin-top: 0.4rem;
+}
+
+@media (min-width: 768px) {
+  .community-cta {
+    display: block;
+    text-align: center; /* Center the heading above the icons */
     font-weight: bold;
-    padding: 0.5rem 1rem;
-    border: 2px solid #3b82f6;
-    border-radius: 25px;
-    transition: all 0.3s ease;
-  }
-  
-  .pulse-animation {
-    animation: pulse 2s infinite;
+    font-size: 1.25rem;
+    margin-top: 1.5rem;
   }
 
-  .copyright-line {
-    text-align: center;
-    padding-top: 2rem;
-    border-top: 1px solid #374151;
-    color: #9ca3af;
+  .contact-section {
+    display: flex; /* Use flexbox for side-by-side layout */
+    justify-content: center ; /* Put space between text and button */
+    align-items: center; /* Vertically align text and button */
+    gap: 2rem;
   }
-  
-  @media (max-width: 768px) {
-    .footer-columns {
-      grid-template-columns: 1fr;
-      text-align: center;
-    }
-    
-    .footer-column {
-      margin-bottom: 2rem;
-    }
+  .contact-cta {
+    font-size: 1.25rem;
   }
+  .contact-cta span {
+    font-size: 1.25rem;
+  }
+  .contact-btn {
+    display: inline-block;
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 1024px) { /* Desktops */
+  .community-cta {
+    font-size: 1.5rem;
+  }
+  .contact-cta {
+    font-size: 1.5rem;
+  }
+  .contact-cta span {
+    display: inline;
+    font-size: 1.5rem;
+  }
+  .contact-btn {
+    font-size: 1.25rem;
+  }
+}
+
+@media (min-width: 1280px) { /* Larger desktops */
+  .community-cta {
+    font-size: 1.75rem;
+  }
+  .contact-cta {
+    font-size: 1.75rem;
+  }
+  .contact-cta span {
+    display: inline;
+    font-size: 1.75rem;
+  }
+  .contact-btn {
+    font-size: 1.5rem;
+  }
+}
