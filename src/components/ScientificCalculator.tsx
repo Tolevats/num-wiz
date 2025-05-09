@@ -1,87 +1,115 @@
-import React from "react";
-import { useCalculatorLogic, UseCalculatorLogicProps } from "../hooks/useCalculatorLogic"; // Import hook and types
-import "./ScientificCalculator.css";
+import React from 'react';
+import { useCalculatorLogic } from '../hooks/useCalculatorLogic';
+import './ScientificCalculator.css';
 
-// Props expected by ScientificCalculator (just the callback)
 interface ScientificCalculatorProps {
-  onCalculationComplete: UseCalculatorLogicProps["onCalculationComplete"]; // Get type from hook
-}
+    onCalculationComplete: ReturnType<typeof useCalculatorLogic>['handleEquals'];
+    switchToBasicMode: () => void;
+} 
 
-const ScientificCalculator: React.FC<ScientificCalculatorProps> = ({ onCalculationComplete }) => {
-  // Use the custom hook, getting all handlers including scientific ones
-  const {
-    displayValue,
-    inputDigit,
-    inputDecimal,
-    clearAll,
-    handleOperator,
-    handleEquals,
-    handleToggleSign,
-    handleUnary, // Use this for scientific functions AND %
-    setDisplayDirectly, // Use this for constants like Pi
-  } = useCalculatorLogic({ onCalculationComplete });
+const ScientificCalculator: React.FC<ScientificCalculatorProps> = ({ onCalculationComplete, switchToBasicMode }) => {
+    const {
+        displayValue, inputDigit, inputDecimal, clearAll,
+        handleOperator, handleEquals, handleToggleSign, handleUnary, setDisplayDirectly
+    } = useCalculatorLogic({ onCalculationComplete });
 
-  return (
-    // Scientific Calculator Container (5 columns)
-    <div className="calculator-container scientific-calc bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-4 sm:p-6 rounded-lg shadow-xl mx-auto max-w-md">
-      {/* Display Screen (same as basic) */}
-      <div className="display bg-gray-800 bg-opacity-90 text-white text-right p-4 rounded-md mb-4 shadow-inner min-h-[4.5rem] flex items-end justify-end">
-        <div
-          className="output text-3xl sm:text-4xl font-mono break-all"
-          role="textbox"
-          aria-readonly="true"
-          aria-live="polite"
-          style={{ wordBreak: "break-all" }}
-        >
-          {displayValue === 'Error'
-            ? <span className="text-red-400">{displayValue}</span>
-            : (displayValue.length > 15 ? parseFloat(displayValue).toExponential(8) : displayValue.length > 9 ? parseFloat(displayValue).toLocaleString('en-US', { maximumFractionDigits: 8 }) : displayValue)
-          }
+    // Button configurations for the 10x5 grid (macOS like)
+    const buttonConfigs = [
+        // Row 1
+        { label: '(', op: '(', type: 'placeholder', aria: 'Open Parenthesis', styleClass: 'sci-function-btn' },
+        { label: ')', op: ')', type: 'placeholder', aria: 'Close Parenthesis', styleClass: 'sci-function-btn' },
+        { label: 'mc', op: 'mc', type: 'memory_placeholder', aria: 'Memory Clear', styleClass: 'sci-function-btn' },
+        { label: 'm+', op: 'm+', type: 'memory_placeholder', aria: 'Memory Add', styleClass: 'sci-function-btn' },
+        { label: 'm-', op: 'm-', type: 'memory_placeholder', aria: 'Memory Subtract', styleClass: 'sci-function-btn' },
+        { label: 'mr', op: 'mr', type: 'memory_placeholder', aria: 'Memory Recall', styleClass: 'sci-function-btn' },
+        { label: 'AC', op: 'clear', type: 'clear', aria: 'All Clear', styleClass: 'bg-slate-300 hover:bg-slate-400 text-black' },
+        { label: '+/-', op: 'toggle_sign', type: 'toggle_sign', aria: 'Toggle Sign', styleClass: 'bg-slate-300 hover:bg-slate-400 text-black' },
+        { label: '%', op: 'percent', type: 'unary', aria: 'Percent', styleClass: 'bg-slate-300 hover:bg-slate-400 text-black' },
+        { label: '÷', op: '/', type: 'operator', aria: 'Divide', styleClass: 'operator-btn' },
+        // Row 2
+        { label: '2nd', op: '2nd', type: 'toggle_placeholder', aria: 'Second Functions', styleClass: 'sci-function-btn' },
+        { label: 'x²', op: 'pow', type: 'unary', aria: 'Square', styleClass: 'sci-function-btn' },
+        { label: 'x³', op: 'pow3', type: 'unary', aria: 'Cube', styleClass: 'sci-function-btn' },
+        { label: 'xʸ', op: 'powy', type: 'binary_placeholder', aria: 'X to the Power of Y', styleClass: 'sci-function-btn' },
+        { label: 'eˣ', op: 'exp', type: 'unary', aria: 'Euler\'s number to the power of X', styleClass: 'sci-function-btn' },
+        { label: '10ˣ', op: 'ten_pow_x', type: 'unary', aria: '10 to the power of X', styleClass: 'sci-function-btn' },
+        { label: '7', op: '7', type: 'digit', aria: '7', styleClass: 'number-btn' },
+        { label: '8', op: '8', type: 'digit', aria: '8', styleClass: 'number-btn' },
+        { label: '9', op: '9', type: 'digit', aria: '9', styleClass: 'number-btn' },
+        { label: '×', op: '*', type: 'operator', aria: 'Multiply', styleClass: 'operator-btn' },
+        // Row 3
+        { label: '¹/ₓ', op: 'one_div_x', type: 'unary', aria: 'Reciprocal', styleClass: 'sci-function-btn' },
+        { label: '√x', op: 'sqrt', type: 'unary', aria: 'Square Root', styleClass: 'sci-function-btn' },
+        { label: '³√x', op: 'cbrt', type: 'unary', aria: 'Cube Root', styleClass: 'sci-function-btn' },
+        { label: 'ʸ√x', op: 'ysqrtx', type: 'binary_placeholder', aria: 'Yth root of X', styleClass: 'sci-function-btn' },
+        { label: 'ln', op: 'ln', type: 'unary', aria: 'Natural Logarithm', styleClass: 'sci-function-btn' },
+        { label: 'log₁₀', op: 'log', type: 'unary', aria: 'Logarithm base 10', styleClass: 'sci-function-btn' },
+        { label: '4', op: '4', type: 'digit', aria: '4', styleClass: 'number-btn' },
+        { label: '5', op: '5', type: 'digit', aria: '5', styleClass: 'number-btn' },
+        { label: '6', op: '6', type: 'digit', aria: '6', styleClass: 'number-btn' },
+        { label: '-', op: '-', type: 'operator', aria: 'Subtract', styleClass: 'operator-btn' },
+        // Row 4
+        { label: 'x!', op: 'fact', type: 'unary', aria: 'Factorial', styleClass: 'sci-function-btn' },
+        { label: 'sin', op: 'sin', type: 'unary', aria: 'Sine', styleClass: 'sci-function-btn' },
+        { label: 'cos', op: 'cos', type: 'unary', aria: 'Cosine', styleClass: 'sci-function-btn' },
+        { label: 'tan', op: 'tan', type: 'unary', aria: 'Tangent', styleClass: 'sci-function-btn' },
+        { label: 'e', op: 'e_const', type: 'unary', aria: 'Euler\'s Number', styleClass: 'sci-function-btn' },
+        { label: 'EE', op: 'EE', type: 'input_placeholder', aria: 'Exponent Entry', styleClass: 'sci-function-btn' },
+        { label: '1', op: '1', type: 'digit', aria: '1', styleClass: 'number-btn' },
+        { label: '2', op: '2', type: 'digit', aria: '2', styleClass: 'number-btn' },
+        { label: '3', op: '3', type: 'digit', aria: '3', styleClass: 'number-btn' },
+        { label: '+', op: '+', type: 'operator', aria: 'Add', styleClass: 'operator-btn' },
+        // Row 5
+        { label: 'Basic', op: 'toggle_basic', type: 'custom_action', action: switchToBasicMode, aria: 'Switch to Basic Mode', styleClass: 'basic-mode-btn-sci' },
+        { label: 'sinh', op: 'sinh', type: 'unary', aria: 'Hyperbolic Sine', styleClass: 'sci-function-btn' },
+        { label: 'cosh', op: 'cosh', type: 'unary', aria: 'Hyperbolic Cosine', styleClass: 'sci-function-btn' },
+        { label: 'tanh', op: 'tanh', type: 'unary', aria: 'Hyperbolic Tangent', styleClass: 'sci-function-btn' },
+        { label: 'π', op: 'pi_const', type: 'direct_display', value: String(Math.PI), aria: 'Pi Constant', styleClass: 'sci-function-btn' },
+        { label: 'Rand', op: 'rand', type: 'unary', aria: 'Random Number', styleClass: 'sci-function-btn' },
+        { label: '0', op: '0', type: 'digit', aria: '0', styleClass: 'number-btn col-span-2' }, // Spans 2 columns
+        { label: '.', op: '.', type: 'decimal', aria: 'Decimal Point', styleClass: 'number-btn' },
+        { label: '=', op: 'equals', type: 'equals', aria: 'Equals', styleClass: 'operator-btn' },
+    ];
+
+    const renderButton = (btnConfig: any, index: number | string) => {
+        let actionFunc = () => console.warn("Placeholder action for:", btnConfig.op);
+        if (btnConfig.type === 'unary') actionFunc = () => handleUnary(btnConfig.op);
+        else if (btnConfig.type === 'digit') actionFunc = () => inputDigit(btnConfig.op);
+        else if (btnConfig.type === 'operator') actionFunc = () => handleOperator(btnConfig.op);
+        else if (btnConfig.type === 'clear') actionFunc = clearAll;
+        else if (btnConfig.type === 'toggle_sign') actionFunc = handleToggleSign;
+        else if (btnConfig.type === 'decimal') actionFunc = inputDecimal;
+        else if (btnConfig.type === 'equals') actionFunc = handleEquals;
+        else if (btnConfig.type === 'direct_display' && btnConfig.value) actionFunc = () => setDisplayDirectly(btnConfig.value);
+        else if (btnConfig.type === 'custom_action' && btnConfig.action) actionFunc = btnConfig.action;
+
+        const baseSciBtnClass = 'sci-btn focus:ring-2 focus:ring-offset-1 focus:ring-pink-500 focus:ring-offset-gray-800';
+        return (
+            <button
+                key={`${btnConfig.label}-${index}`}
+                onClick={actionFunc}
+                className={`${baseSciBtnClass} ${btnConfig.styleClass || 'sci-function-btn'}`}
+                aria-label={btnConfig.aria}
+            >
+                {btnConfig.label}
+            </button>
+        );
+    };
+
+    return (
+        <div className="scientific-calculator-container">
+            <div className="sci-display">
+                <div className="sci-output" role="textbox" aria-readonly="true" aria-live="polite">
+                    {displayValue === 'Error' || displayValue.startsWith("Error:")
+                        ? <span className="text-red-400">{displayValue}</span>
+                        : (displayValue.length > 18 && !displayValue.includes('E') ? parseFloat(displayValue).toExponential(10) : displayValue.length > 12 && !displayValue.includes('E') ? parseFloat(displayValue).toLocaleString('en-US', { maximumFractionDigits: 10 }) : displayValue)
+                    }
+                </div>
+            </div>
+            <div className="sci-buttons-grid">
+                {buttonConfigs.map(renderButton)}
+            </div>
         </div>
-      </div>
-
-       {/* Scientific Calculator Buttons Grid (5 columns) */}
-       <div className="buttons grid grid-cols-5 gap-2">
-            {/* --- Scientific Column --- */}
-            <button onClick={() => handleUnary('sin')} className="btn sci bg-indigo-400 hover:bg-indigo-500 text-white font-semibold py-3 rounded-md shadow focus:ring-2 focus:ring-indigo-600" aria-label="Sine">sin</button>
-            <button onClick={() => handleUnary('cos')} className="btn sci bg-indigo-400 hover:bg-indigo-500 text-white font-semibold py-3 rounded-md shadow focus:ring-2 focus:ring-indigo-600" aria-label="Cosine">cos</button>
-            <button onClick={() => handleUnary('tan')} className="btn sci bg-indigo-400 hover:bg-indigo-500 text-white font-semibold py-3 rounded-md shadow focus:ring-2 focus:ring-indigo-600" aria-label="Tangent">tan</button>
-            <button onClick={() => handleUnary('ln')} className="btn sci bg-indigo-400 hover:bg-indigo-500 text-white font-semibold py-3 rounded-md shadow focus:ring-2 focus:ring-indigo-600" aria-label="Natural Logarithm">ln</button>
-            <button onClick={() => handleUnary('log')} className="btn sci bg-indigo-400 hover:bg-indigo-500 text-white font-semibold py-3 rounded-md shadow focus:ring-2 focus:ring-indigo-600" aria-label="Logarithm base 10">log</button>
-
-            {/* --- Standard Columns --- */}
-            {/* Row 1 */}
-            <button onClick={clearAll} className="btn bg-rose-300 hover:bg-rose-400 text-black font-semibold py-3 rounded-md shadow focus:ring-2 focus:ring-rose-500" aria-label="All Clear">AC</button>
-            <button onClick={handleToggleSign} className="btn bg-gray-300 hover:bg-gray-400 text-black font-semibold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-500" aria-label="Toggle Sign">+/-</button>
-            <button onClick={() => handleUnary('%')} className="btn bg-gray-300 hover:bg-gray-400 text-black font-semibold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-500" aria-label="Percent">%</button>
-            <button onClick={() => handleOperator('÷')} className="btn operator bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-amber-700" aria-label="Divide">÷</button>
-            {/* Row 2 */}
-            <button onClick={() => handleUnary('sqrt')} className="btn sci bg-indigo-400 hover:bg-indigo-500 text-white font-semibold py-3 rounded-md shadow focus:ring-2 focus:ring-indigo-600" aria-label="Square Root">√</button>
-            <button onClick={() => inputDigit('7')} className="btn number bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-400">7</button>
-            <button onClick={() => inputDigit('8')} className="btn number bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-400">8</button>
-            <button onClick={() => inputDigit('9')} className="btn number bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-400">9</button>
-            <button onClick={() => handleOperator('×')} className="btn operator bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-amber-700" aria-label="Multiply">×</button>
-            {/* Row 3 */}
-            <button onClick={() => handleUnary('exp')} className="btn sci bg-indigo-400 hover:bg-indigo-500 text-white font-semibold py-3 rounded-md shadow focus:ring-2 focus:ring-indigo-600" aria-label="Exponent e">eˣ</button>
-            <button onClick={() => inputDigit('4')} className="btn number bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-400">4</button>
-            <button onClick={() => inputDigit('5')} className="btn number bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-400">5</button>
-            <button onClick={() => inputDigit('6')} className="btn number bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-400">6</button>
-            <button onClick={() => handleOperator('-')} className="btn operator bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-amber-700" aria-label="Subtract">−</button>
-            {/* Row 4 */}
-            <button onClick={() => handleUnary('pow')} className="btn sci bg-indigo-400 hover:bg-indigo-500 text-white font-semibold py-3 rounded-md shadow focus:ring-2 focus:ring-indigo-600" aria-label="Square">x²</button>
-            <button onClick={() => inputDigit('1')} className="btn number bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-400">1</button>
-            <button onClick={() => inputDigit('2')} className="btn number bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-400">2</button>
-            <button onClick={() => inputDigit('3')} className="btn number bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-400">3</button>
-            <button onClick={() => handleOperator('+')} className="btn operator bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-amber-700" aria-label="Add">+</button>
-            {/* Row 5 */}
-            <button onClick={() => setDisplayDirectly(String(Math.PI))} className="btn sci bg-indigo-400 hover:bg-indigo-500 text-white font-semibold py-3 rounded-md shadow focus:ring-2 focus:ring-indigo-600" aria-label="Pi Constant">π</button>
-            {/* Zero button now takes 1 column */}
-            <button onClick={() => inputDigit('0')} className="btn number col-span-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-400">0</button>
-            <button onClick={inputDecimal} className="btn number bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-gray-400" aria-label="Decimal Point">.</button>
-            <button onClick={handleEquals} className="btn equals bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-md shadow focus:ring-2 focus:ring-emerald-700" aria-label="Equals">=</button>
-        </div>
-    </div>
-);
+    );
 };
-
 export default ScientificCalculator;
