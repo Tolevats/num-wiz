@@ -3,7 +3,7 @@ import './Header.css';
 
 const Header: React.FC = () => {
   return (
-    <header className="app-header">
+    <header className="app-header w-full ">
       <div className="header-content">
         <div className="brand-container">
           <div className="logo">

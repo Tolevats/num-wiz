@@ -1,13 +1,8 @@
 .app-header {
     background: #111827;
     padding: 1rem 2rem;
-    width: 100%;
+    text-align: left;
     border-bottom: 1px solid #374151;
-  }
-  
-  .header-content {
-    max-width: 1200px;
-    margin: 0 auto;
   }
   
   .brand-container {
