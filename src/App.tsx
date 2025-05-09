@@ -350,7 +350,7 @@ function App() {
       <Header />
       <AnimatedBackground />
       <section className="header w-full text-center my-4 sm:my-6">
-        <h2 className="tagline text-4xl sm:text-5xl font-bold bg-clip-text">
+        <h2 className="tagline">
           Get your numbers right, the <span className="fun">fun way!</span>
         </h2>
       </section>

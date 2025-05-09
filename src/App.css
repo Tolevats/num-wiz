@@ -6,8 +6,60 @@
 }
 
 .App {
+  min-height: 100vh; /* Ensure full viewport height */
+    /* display: flex; */ /* Flex direction managed by Tailwind */
+    /* flex-direction: column; */
+    /* align-items: center; */
+    /* background-color: #e0f2fe; */ /* Tailwind bg-gradient-to-br from-sky-100 to-indigo-200 */
+    /* padding: 0.5rem; */ /* Tailwind p-2 sm:p-4 */
+}
+
+.App main {
+  flex-grow: 1; /* Allow main to grow and fill space */
+}
+
+.calculator-wrapper {
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
+  justify-content: center; /* Centers calculator if it's narrower than its column */
+}
+
+.tagline, .cta-text {
+  margin: 0 auto;
+  text-align: center;
+  font-weight: bold;
+  text-shadow: 6px 6px 8px rgba(240, 250, 56, 0.2);
+}
+
+.tagline {
+  font-size: 1.5rem;
+} 
+
+.cta-text {
+  font-size: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .tagline {
+    font-size: 1.75rem;
+  }
+  .cta-text {
+    font-size: 1.5rem;
+  }
+}
+@media (min-width: 1024px) { /* Desktops */
+  .tagline {
+    font-size: 2rem;
+  }
+  .cta-text {
+    font-size: 1.5rem;
+  }
+}
+@media (min-width: 1280px) { /* Larger desktops */
+  .tagline {
+    font-size: 2.25rem;
+  }
+  .cta-text {
+    font-size: 2rem;
+  }
 }
