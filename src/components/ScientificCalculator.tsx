@@ -1,9 +1,9 @@
 import React from 'react';
-import { useCalculatorLogic } from '../hooks/useCalculatorLogic';
+import { useCalculatorLogic, UseCalculatorLogicProps } from '../hooks/useCalculatorLogic';
 import './ScientificCalculator.css';
 
 interface ScientificCalculatorProps {
-    onCalculationComplete: ReturnType<typeof useCalculatorLogic>['handleEquals'];
+    onCalculationComplete: UseCalculatorLogicProps['onCalculationComplete']; // Use imported type
     switchToBasicMode: () => void;
 } 
 
