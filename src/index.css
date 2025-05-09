@@ -1,7 +1,4 @@
-/* Global styles (Tailwind setup) */
-
-/* @import 'tailwindcss/preflight'; */
-@tailwind utilities;
+/* Global styles (plus Tailwind setup) */
 
 /* Global base styles */
 * {
@@ -16,7 +13,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #747474;
+  background-color: #595858;
 }
 
 code {
