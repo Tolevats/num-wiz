@@ -1,13 +1,42 @@
 import React from "react";
-import { useCalculatorLogic, UseCalculatorLogicProps } from "../hooks/useCalculatorLogic";
+import { useCalculatorLogic } from "../hooks/useCalculatorLogic";
 import "./BasicCalculator.css";
+
+// SVG Lock Icon component
+const LockIcon = () => (
+  <img 
+    src="/imgs/lock-keyhole-minimalistic-white.svg" 
+    alt="Lock icon"
+    className="icon"
+    aria-hidden="true"
+    width="24"
+    height="24"
+  />
+);
+
+// SVG Change Mode Icon component
+const ChangeModeIcon = () => (
+  <img
+    src="/imgs/calculator-operators.svg"
+    alt="Science icon"
+    className="icon"
+    width="20"
+    height="20"
+  />
+);
 
 // Props expected by BasicCalculator (just the callback)
 interface BasicCalculatorProps {
-  onCalculationComplete: UseCalculatorLogicProps['onCalculationComplete']; // Get type from hook
+  onCalculationComplete:  ReturnType<typeof useCalculatorLogic>['handleEquals']; // Get type from hook
+  isScientificModeUnlocked: boolean;
+  onToggleScientific: () => void; // Callback to toggle scientific mode active state
 }
 
-const BasicCalculator: React.FC<BasicCalculatorProps> = ({ onCalculationComplete }) => {
+const BasicCalculator: React.FC<BasicCalculatorProps> = ({ 
+  onCalculationComplete, 
+  isScientificModeUnlocked,
+  onToggleScientific 
+}) => {
   // Use the custom hook to get state and handlers
   const {
       displayValue,
@@ -17,7 +46,7 @@ const BasicCalculator: React.FC<BasicCalculatorProps> = ({ onCalculationComplete
       handleOperator,
       handleEquals,
       handleToggleSign,
-      handleUnary, // Use handleUnary for '%'
+      handleUnary,
   } = useCalculatorLogic({ onCalculationComplete });
 
   // --- Render ---
@@ -25,27 +54,21 @@ const BasicCalculator: React.FC<BasicCalculatorProps> = ({ onCalculationComplete
     <div className="calculator-container">
       {/* Display Screen with displayValue state */}
       <div className="display">
-        <div
-          className="output"
-          role="textbox"
-          aria-readonly="true"
-          aria-live="polite"
-          aria-label="calculator screen display"
-        >
+        <div className="output" role="textbox" aria-readonly="true" aria-live="polite" aria-label="calculator screen display">
           {/* Display formatting */}
-          {displayValue === 'Error'
+          {displayValue === "Error" || displayValue.startsWith("Error:")
             ? <span className="text-red-400">{displayValue}</span>
-            : (displayValue.length > 15 ? parseFloat(displayValue).toExponential(8) : displayValue.length > 9 ? parseFloat(displayValue).toLocaleString('en-US', { maximumFractionDigits: 8 }) : displayValue)
+            : (displayValue.length > 15 && !displayValue.includes('E') ? parseFloat(displayValue).toExponential(8) : displayValue.length > 9 && !displayValue.includes('E') ? parseFloat(displayValue).toLocaleString('en-US', { maximumFractionDigits: 8 }) : displayValue)
           }
         </div>
       </div>
 
-      {/* Calculator Buttons Grid with onClick handlers */}
+      {/* Calculator Buttons Grid - 4 columns */}
       <div className="buttons">
         {/* Row 1: AC, +/-, %, ÷ */}
         <button onClick={clearAll} className="btn clear" aria-label="All Clear">AC</button>
         <button onClick={handleToggleSign} className="btn utility" aria-label="Toggle Sign">+/-</button>
-        <button onClick={() => handleUnary('%')} className="btn utility" aria-label="Percent">%</button>
+        <button onClick={() => handleUnary("percent")} className="btn utility" aria-label="Percent">%</button>
         <button onClick={() => handleOperator("÷")} className="btn operator" aria-label="Divide">÷</button>
 
         {/* Row 2: 7, 8, 9, * */}
@@ -66,16 +89,18 @@ const BasicCalculator: React.FC<BasicCalculatorProps> = ({ onCalculationComplete
         <button onClick={() => inputDigit("3")} className="btn number" aria-label="Three">3</button>
         <button onClick={() => handleOperator("+")} className="btn operator" aria-label="Add">+</button>
 
-        {/* Row 5: Locked, 0, ., = */}
-        <button className="btn locked" aria-label="Scientific Mode Locked">
-        <img 
-          src="/imgs/lock-keyhole-minimalistic-white.svg" 
-          alt=""
-          className="icon"
-          aria-hidden="true"
-          width="24"
-          height="24"
-        />
+        {/* Row 5: Sci Toggle, 0, ., = */}
+        <button
+          onClick={onToggleScientific}
+          className={`btn focus:ring-2 ${
+            isScientificModeUnlocked
+                ? 'bg-purple-500 hover:bg-purple-600 text-white focus:ring-purple-700'
+                : 'bg-gray-400 text-gray-700 cursor-not-allowed focus:ring-gray-500'
+        }`}
+          aria-label={isScientificModeUnlocked ? "Switch to Scientific Mode" : "Scientific Mode Locked"}
+          disabled={!isScientificModeUnlocked} // Disable if not unlocked, though click handled by onToggleScientific
+        >
+          {isScientificModeUnlocked ? <ChangeModeIcon /> : <LockIcon />}
         </button>
         <button onClick={() => inputDigit("0")} className="btn number" aria-label="Zero">0</button>
         <button onClick={inputDecimal} className="btn number" aria-label="Decimal Point">.</button>
