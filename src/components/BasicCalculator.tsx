@@ -1,5 +1,5 @@
 import React from "react";
-import { useCalculatorLogic } from "../hooks/useCalculatorLogic";
+import { useCalculatorLogic, UseCalculatorLogicProps } from "../hooks/useCalculatorLogic";
 import "./BasicCalculator.css";
 
 // SVG Lock Icon component
@@ -27,7 +27,7 @@ const ChangeModeIcon = () => (
 
 // Props expected by BasicCalculator (just the callback)
 interface BasicCalculatorProps {
-  onCalculationComplete:  ReturnType<typeof useCalculatorLogic>['handleEquals']; // Get type from hook
+  onCalculationComplete: UseCalculatorLogicProps['onCalculationComplete']; // Use imported type
   isScientificModeUnlocked: boolean;
   onToggleScientific: () => void; // Callback to toggle scientific mode active state
 }
