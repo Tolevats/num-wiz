@@ -123,13 +123,13 @@ export interface UseCalculatorLogicProps {
     secondOperand?: number | null,
     operationType?: OperationType | null
   ) => void;
-  initialDisplay?: string;
+  /* initialDisplay?: string; */
 }
 
 // --- The Custom Hook ---
-export const useCalculatorLogic = ({ onCalculationComplete, initialDisplay = "0" }: UseCalculatorLogicProps) => {
+export const useCalculatorLogic = ({ onCalculationComplete }: UseCalculatorLogicProps) => {
   // --- State Variables ---
-  const [displayValue, setDisplayValue] = useState<string>(initialDisplay);
+  const [displayValue, setDisplayValue] = useState<string>("0");
   const [firstOperand, setFirstOperand] = useState<number | null>(null);
   const [operator, setOperator] = useState<Operator | null>(null); // Only for binary ops (+,-,*,/)
   const [waitingForSecondOperand, setWaitingForSecondOperand] = useState<boolean>(false);
@@ -144,7 +144,7 @@ export const useCalculatorLogic = ({ onCalculationComplete, initialDisplay = "0"
         setDisplayValue(digit);
         setWaitingForSecondOperand(false);
       } else {
-        if (displayValue.replace(/[.-]/g, "").length >= 15 && !displayValue.includes("E")) return;
+        if (displayValue.replace(/[.-]/g, "").length >= 20 && !displayValue.includes("E")) return;
         setDisplayValue(displayValue === "0" ? digit : displayValue + digit);
       }
     }, [displayValue, waitingForSecondOperand, prevCalculation]);
