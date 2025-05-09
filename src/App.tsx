@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import BasicCalculator from "./components/BasicCalculator";
 import ScientificCalculator from "./components/ScientificCalculator";
 import PowerUpDashboard from "./components/PowerUpDashboard";
@@ -7,7 +7,7 @@ import Header from "./components/Header";
 import AnimatedBackground from "./components/AnimatedBackground";
 import Footer from "./components/Footer";
 import "./App.css";
-import { OperationType, CalculationOperator } from "./hooks/useCalculatorLogic";
+import { OperationType, CalculationOperator, UseCalculatorLogicProps } from "./hooks/useCalculatorLogic";
 
 // --- Data Definitions for Badges and Facts ---
 interface Badge {
@@ -279,8 +279,7 @@ function App() {
     [unlockedBadges]
   ); // Dependency array includes unlockedBadges
 
-  const handleCalculationComplete = useCallback(
-    (
+  const handleCalculationComplete: UseCalculatorLogicProps['onCalculationComplete'] = useCallback((
       result: number | string,
       firstOperand?: number | null,
       operator?: CalculationOperator | null,
