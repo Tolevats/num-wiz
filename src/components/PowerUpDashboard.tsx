@@ -38,7 +38,7 @@ const PowerUpDashboard: React.FC<PowerUpDashboardProps> = ({
     <div className={`power-up-dashboard bg-white bg-opacity-80 backdrop-blur-sm p-4 rounded-lg shadow-md mb-6 w-full max-w-md mx-auto ${className}`}>
       {!isUnlocked ? (
           <>
-            <div className="flex justify-between items-center mb-2">
+            <div className="flex justify-between items-center mb-1">
               <div className="flex items-center text-spans-container">
                 <div className="text-yellow-500 mr-2">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -54,12 +54,12 @@ const PowerUpDashboard: React.FC<PowerUpDashboardProps> = ({
                 </div>
           </>
       ) : ( <p className="text-lg font-semibold text-green-600 text-center mb-4 animate-pulse">{unlockMessage}</p> )}
-      <div className={`badges-grid grid grid-cols-${badges.length > 5 ? 5 : Math.max(3, badges.length)} gap-3 justify-items-center`}>
+      <div className="badges-grid grid grid-cols-${badges.length > 5 ? 5 : Math.max(3, badges.length)}`}">
         {badges.map((badge) => {
           const isUnlocked = unlockedBadges.includes(badge.id);
           const isJustUnlocked = badge.id === justUnlockedBadgeId;
           return (
-            <div key={badge.id} className={`badge-item text-center p-2 rounded-lg w-16 h-16 flex flex-col items-center justify-center transition-all duration-300 relative group ${ isUnlocked ? 'bg-yellow-300 shadow-lg scale-105' : 'bg-gray-100 opacity-60 shadow-sm' } ${ isJustUnlocked ? 'animate-pulse' : '' }`}>
+            <div key={badge.id} className={`badge-item text-center flex flex-col items-center justify-center transition-all duration-300 relative group ${ isUnlocked ? 'bg-yellow-300 shadow-lg scale-105' : 'bg-gray-100 opacity-60 shadow-sm' } ${ isJustUnlocked ? 'animate-pulse' : '' }`}>
               <span className="text-2xl mb-1">{isUnlocked ? badge.icon : badge.lockedIcon}</span>
                <div className="absolute bottom-full mb-2 w-max px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10"> {isUnlocked ? badge.name : badge.description} {!isUnlocked && <span className="locked">(🔒)</span>} </div>
             </div> );
